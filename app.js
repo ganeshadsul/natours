@@ -4,15 +4,27 @@ const AppError = require('./utils/appError')
 const globalErrorHandler = require('./controllers/errorController')
 const tourRouter = require('./routes/tourRoutes')
 const userRouter = require('./routes/userRoutes')
+const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
 
-const app = express()
+const app = express();
+
+app.use(helmet());
+
+// Global Middleware
+const limiter = rateLimit({
+    max: 100,
+    windowMs: 60 * 60 * 1000,
+    message: 'Too many requests from this IP, Please try again in an one hour',
+});
+app.use('/api', limiter);
 
 // middleware
 if (process.env.NODE_ENV === 'development') {
-    app.use(morgan('dev'))
+    app.use(morgan('dev'));
 }
-app.use(express.json())
-app.use(express.static(`${__dirname}/public`))
+app.use(express.json());
+app.use(express.static(`${__dirname}/public`));
 
 // app.get('/', (req, res) => {
 //     // res.status(200).send('Hello From Home Page!')
@@ -33,18 +45,14 @@ app.use(express.static(`${__dirname}/public`))
 //     })
 // })
 
-
 // app.get('/api/v1/tours', getAllTours)
 // app.post('/api/v1/tours', createTour)
 // app.get('/api/v1/tours/:id', getTour)
 
-
-app.use('/api/v1/tours', tourRouter)
-app.use('/api/v1/users', userRouter)
-
+app.use('/api/v1/tours', tourRouter);
+app.use('/api/v1/users', userRouter);
 
 app.all('*', (req, res, next) => {
-    
     // res.status(200).json({
     //     status: 'fail',
     //     message: `Can't find ${req.originalUrl} on this server`
@@ -56,8 +64,8 @@ app.all('*', (req, res, next) => {
 
     // next(err)
 
-    next(new AppError(`Can't find ${req.originalUrl} on this server`, 404))
-})
+    next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
+});
 
 app.use(globalErrorHandler)
 

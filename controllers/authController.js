@@ -15,37 +15,37 @@ const signToken = id => {
 }
 
 exports.signup = catchAsync(async(req, res, next) => {
-    // const user = await User.create(req.body)
-    const user = await User.create({
-        name: req.body.name,      
-        email: req.body.email,      
-        password: req.body.password,      
-        passwordConfirm: req.body.passwordConfirm,
-        passwordChangedAt: req.body.passwordChangedAt,
-        role: req.body.role,
-    })
+  // const user = await User.create(req.body)
+  const user = await User.create({
+    name: req.body.name,
+    email: req.body.email,
+    password: req.body.password,
+    passwordConfirm: req.body.passwordConfirm,
+    passwordChangedAt: req.body.passwordChangedAt,
+    role: req.body.role,
+  });
 
-    user.password = undefined
-    // const token = jwt.sign({ id:user._id }, process.env.JWT_SECRET, {
-    //     expiresIn: process.env.JWT_EXPIRY_DURATION
-    // })
-    const token = signToken(user._id)
-    const cookieOptions = {
-      expires: new Date(
-        Date.now() + process.env.JWT_COOKIE_EXPIRY_DURATION * 60 * 60 * 1000
-      ),
-      secure: process.env.NODE_ENV === 'production' ? true : false,
-      httpOnly: true,
-    };
+  user.password = undefined;
+  // const token = jwt.sign({ id:user._id }, process.env.JWT_SECRET, {
+  //     expiresIn: process.env.JWT_EXPIRY_DURATION
+  // })
+  const token = signToken(user._id);
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRY_DURATION * 60 * 60 * 1000
+    ),
+    secure: process.env.NODE_ENV === 'production' ? true : false,
+    httpOnly: true,
+  };
 
-    res.cookie('jwt', token, cookieOptions)
-    res.status(201).json({
-        status: 'success',
-        token,
-        data: {
-            user
-        }
-    })
+  res.cookie('jwt', token, cookieOptions);
+  res.status(201).json({
+    status: 'success',
+    token,
+    data: {
+      user,
+    },
+  });
 })
 
 // exports.login = catchAsync(async (req, res, next) => {
