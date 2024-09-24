@@ -12,9 +12,11 @@ const hpp = require('hpp');
 
 const app = express();
 
+// Set security HTTP headers
 app.use(helmet());
 
 // Global Middleware
+// Limit requests from same API
 const limiter = rateLimit({
     max: 100,
     windowMs: 60 * 60 * 1000,
@@ -23,12 +25,19 @@ const limiter = rateLimit({
 app.use('/api', limiter);
 
 // middleware
+// Development Logging
 if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
 app.use(express.json());
+
+// Data sanitization against NoSQL query injection
 app.use(mongoSanitize());
+
+// Data sanitization against XSS
 app.use(xss());
+
+// Prevent parameter pollution
 app.use(
     hpp({
         whitelist: [
@@ -42,6 +51,8 @@ app.use(
         ],
     })
 );
+
+// Serving static files
 app.use(express.static(`${__dirname}/public`));
 
 // app.get('/', (req, res) => {
