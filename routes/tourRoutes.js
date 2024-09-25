@@ -11,7 +11,7 @@ router.param('id', (req, res, next, value) => {
 // Routes
 router.route('/')
     .get(authController.protect, getAllTours)
-    .post(createTour)
+    .post(authController.protect, createTour)
 
 router.route('/stats')
     .get(getTourStats)

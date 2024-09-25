@@ -46,7 +46,8 @@ const schema = {
         select: false
     },
     passwordChangedAt: {
-        type: Date
+        type: Date,
+        select: false
     },
     passwordResetToken: {
         type: String
