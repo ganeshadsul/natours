@@ -15,7 +15,7 @@ mongoose.connect(process.env.DATABASE.replace('<db_password>', process.env.DB_PA
 })
 
 
-const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours-simple.json`, 'utf-8'))
+const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours.json`, 'utf-8'))
 
 // Create Entries
 const importData = async () => {
@@ -51,3 +51,9 @@ if(process.argv.includes('--delete')) {
 // if(process.argv[2] === '--delete') {
 //     deleteData()
 // }
+
+// Delete Tours Command
+// node ./dev-data/data/import-dev-data.js --delete
+
+// Import Tours Command
+// node ./dev-data/data/import-dev-data.js --import
