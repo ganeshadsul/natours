@@ -100,7 +100,12 @@ const schema = {
             day: Number
         }
     ],
-    guides: Array
+    guides: [
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: 'User'
+        }
+    ]
 }
 
 
@@ -115,10 +120,12 @@ const tourSchema = mongoose.Schema(schema, {
 //     console.log(`Saving the Tour ${this.name}`);
 //     next()
 // })
-tourSchema.pre('save', function (next) {
-    this.slug = slugify(this.name, { lower: true })
-    next()
-})
+
+// Using Embedding to save user(guides in same object)
+// tourSchema.pre('save', function (next) {
+//     this.slug = slugify(this.name, { lower: true })
+//     next()
+// })
 
 tourSchema.pre('save', async function (next) {
     const guidePromises = this.guides.map(async id => await User.findById(id))
