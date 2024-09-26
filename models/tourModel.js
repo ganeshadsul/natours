@@ -138,12 +138,20 @@ tourSchema.pre('save', async function (next) {
 
 // Query Middleware
 // tourSchema.pre('find', function(next) {
-tourSchema.pre(/^find/, function(next) {
-    this.find({ secretTour: { $ne: true } })
+tourSchema.pre(/^find/, function (next) {
+    this.find({ secretTour: { $ne: true } });
 
-    this.start = Date.now()
-    next()
-})
+    this.start = Date.now();
+    next();
+});
+
+tourSchema.pre(/^find/, function (next) {
+    this.populate({
+        path: 'guides',
+        select: '-__v',
+    });
+    next();
+});
 
 tourSchema.post(/^find/, function(docs, next) {
     console.log(`Time took for Query Excecution: ${Date.now() - this.start} milliseconds`);
