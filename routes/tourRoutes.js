@@ -3,6 +3,7 @@ const {getAllTours, createTour, getTour, updateTour, deleteTour, getTourStats, g
 const authController = require('../controllers/authController')
 const reviewController = require('../controllers/reviewController');
 const router = express.Router();
+const reviewRouter = require('../routes/reviewRoutes');
 
 router.param('id', (req, res, next, value) => {
     console.log(value);
@@ -29,10 +30,17 @@ router
         deleteTour
     );
 
+// Using standard way
 // router
-//     .route('/:id/review')
+//     .route('/:tourId/review')
 //     .get(reviewController.getReview)
-//     .post(authController.protect, reviewController.createReview);
+//     .post(
+//         authController.protect,
+//         authController.restictTo('user'),
+//         reviewController.createReview
+//     );
 
+// using merge params
+router.use('/:tourId/review', reviewRouter);
 
 module.exports = router
