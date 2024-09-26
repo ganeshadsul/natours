@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 
 process.on('uncaughtException', err => {
     console.log(`Uncaught Exception Detected`);
+	console.log(err);
     console.log(err.name, err.message);
     console.log('Shutting Down Server!!');
     process.exit(1)

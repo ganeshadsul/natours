@@ -1,28 +1,38 @@
 const express = require('express');
 const {getAllTours, createTour, getTour, updateTour, deleteTour, getTourStats, getMonthlyPlan} = require('./../controllers/tourController');
 const authController = require('../controllers/authController')
-const router = express.Router()
+const reviewController = require('../controllers/reviewController');
+const router = express.Router();
 
 router.param('id', (req, res, next, value) => {
     console.log(value);
-    next()
-})
+    next();
+});
 
 // Routes
-router.route('/')
+router
+    .route('/')
     .get(authController.protect, getAllTours)
-    .post(authController.protect, createTour)
+    .post(authController.protect, createTour);
 
-router.route('/stats')
-    .get(getTourStats)
+router.route('/stats').get(getTourStats);
 
-router.route('/monthly-plan/:year')
-    .get(getMonthlyPlan)
+router.route('/monthly-plan/:year').get(getMonthlyPlan);
 
-router.route('/:id')
+router
+    .route('/:id')
     .get(getTour)
     .patch(updateTour)
-    .delete(authController.protect, authController.restictTo('admin', 'lead-guide'), deleteTour)
+    .delete(
+        authController.protect,
+        authController.restictTo('admin', 'lead-guide'),
+        deleteTour
+    );
+
+// router
+//     .route('/:id/review')
+//     .get(reviewController.getReview)
+//     .post(authController.protect, reviewController.createReview);
 
 
 module.exports = router

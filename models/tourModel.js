@@ -130,6 +130,7 @@ const tourSchema = mongoose.Schema(schema, {
 tourSchema.pre('save', async function (next) {
     const guidePromises = this.guides.map(async id => await User.findById(id))
     this.guides = await Promise.all(guidePromises)
+	next();
 })
 // tourSchema.post('save', function (doc, next) {
 //     console.log(doc);
