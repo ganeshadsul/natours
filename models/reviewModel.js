@@ -25,11 +25,18 @@ const schema = {
     },
 };
 
-const reviewSchema = mongoose.Schema(schema);
+const reviewSchema = mongoose.Schema(schema, {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+});
 
+// Middlewares
 reviewSchema.pre(/^find/, function (next) {
-    // Middlewares
-    this.populate('tour').populate('user');
+    // this.populate('tour').populate('user');
+    this.populate({
+        path: 'user',
+        select: '_id name',
+    });
     next();
 });
 

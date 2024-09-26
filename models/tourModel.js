@@ -169,6 +169,12 @@ tourSchema.pre('aggregate', function(next) {
 tourSchema.virtual('durationWeeks').get(function () {
     return this.duration / 7
 })
+// Virtual populating
+tourSchema.virtual('reviews', {
+    ref: 'Review',
+    foreignField: 'tour',
+    localField: '_id',
+});
 
 const Tour = mongoose.model('Tour', tourSchema)
 
