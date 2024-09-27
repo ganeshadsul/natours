@@ -1,35 +1,31 @@
 const User = require("../models/userModel")
 const AppError = require("../utils/appError")
 const catchAsync = require("../utils/catchAsync")
+const factory = require('./handlers/factoryHandlers');
 
 const filteObj = (obj, ...allowedFields) => {
-    const newObj = {}
-    Object.keys(obj).forEach(el => {
-        if(allowedFields.includes(el)) {
-            newObj[el] = obj[el]
+    const newObj = {};
+    Object.keys(obj).forEach((el) => {
+        if (allowedFields.includes(el)) {
+            newObj[el] = obj[el];
         }
-    })
-    return newObj
-}
+    });
+    return newObj;
+};
 
 exports.getAllUsers = (req, res) => {
     res.status(500).json({
         status: 'error',
-        message: 'This route is not yet defined!'
-    })
-}
+        message: 'This route is not yet defined!',
+    });
+};
 exports.createUser = (req, res) => {
     res.status(500).json({
         status: 'error',
-        message: 'This route is not yet defined!'
-    })
-}
-exports.getUser = (req, res) => {
-    res.status(500).json({
-        status: 'error',
-        message: 'This route is not yet defined!'
-    })
-}
+        message: 'Use Signup Route to create User',
+    });
+};
+exports.getUser = factory.getOne(User, []);
 
 exports.updateMyDetails = catchAsync(async(req, res, next) => {
     

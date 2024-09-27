@@ -3,141 +3,15 @@ const Tour = require('../models/tourModel');
 const ApiFeatures = require('./../utils/apiFeatures')
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('../utils/appError');
+const factory = require('./handlers/factoryHandlers');
 
-// const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`))
+// Using FactoryHandler
+exports.getAllTours = factory.getAll(Tour);
+exports.createTour = factory.createOne(Tour);
+exports.getTour = factory.getOne(Tour, ['reviews']);
+exports.updateTour = factory.updateOne(Tour);
+exports.deleteTour = factory.deleteOne(Tour);
 
-// exports.checkBody = (req, res, next) => {
-//     if(!req.name || !req.duration || !req.difficulty) {
-//         return res.status(400).json({
-//             status: 'fail', 
-//             message: 'Data Missing'
-//         })
-//     }
-//     next()
-// }
-
-
-// const catchAsync = fn => {
-//     return (req, res, next) => {
-//         fn(req, res, next).catch(next)
-//     }
-// }
-
-exports.getAllTours = catchAsync(async (req, res, next) => {
-    
-    // Bulding query
-    // const queryObj = {...req.query}
-    // const excludedField = ['page', 'sort', 'limit', 'fields']
-    // excludedField.forEach(el => delete queryObj[el])
-
-    // let query = Tour.find(queryObj)
-    
-    // Sorting
-    // if(req.query.sort) {
-    //     let sortBy = req.query.sort.split(',').join(' ')
-    //     query = query.sort(sortBy)
-    // } else {
-    //     query = query.sort('-createdAt')
-    // }
-
-    // Field Limiting
-    // if(req.query.fields) {
-    //     const fields = req.query.fields.split(',').join(' ')
-    //     query = query.select(fields)
-    // } else {
-    //     query = query.select('-__v')
-    // }
-
-    // Pagination
-    // const page = req.query.page * 1 || 1
-    // const limit = req.query.limit * 1 || 10
-    // const skip = (page - 1) * limit
-    // query = query.skip(skip).limit(limit)
-
-    const features = new ApiFeatures(Tour.find(), req.query)
-        .filter()
-        .sort()
-        .limitFilds()
-        .pagination()
-
-    const tours = await features.query
-
-    res.status(200).json({
-        status: 'success',
-        results: tours.length,
-        data: {
-            tours
-        }
-    })
-})
-
-exports.createTour = catchAsync(async (req, res, next) => {
-
-    // const newTour = new Tour(req.body)
-    // newTour.save();
-
-    const newTour = await Tour.create(req.body)
-    
-    res.status(201).json({
-        status: 'success',
-        data: {
-            tour: newTour
-        }
-    })
-})
-
-exports.getTour = catchAsync(async (req, res, next) => {
-
-    const tour = await Tour.findById(req.params.id).populate('reviews');
-
-    if(!tour) {
-        // return res.status(404).json({
-        //     status: 'fail',
-        //     data: {
-        //         tour
-        //     }
-        // })
-
-        return next(new AppError('Tour not found for specified id', 404))
-    }
-    res.status(200).json({
-        status: 'success',
-        data: {
-            tour
-        }
-    })
-})
-
-exports.updateTour = catchAsync(async (req, res, next) => {
-    const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-        runValidators: true
-    })
-
-    if(!tour) {
-        return next(new AppError('Tour not found for specified id', 404))
-    }
-
-    res.status(200).json({
-        status: 'success',
-        data: {
-            tour
-        }
-    })
-})
-
-exports.deleteTour = catchAsync(async (req, res, next) => {
-    const tour = await Tour.findByIdAndDelete(req.params.id)
-
-    if(!tour) {
-        return next(new AppError('Tour not found for specified id', 404))
-    }
-
-    res.status(200).json({
-        status: 'success',
-        data: null
-    })
-})
 
 exports.getTourStats = catchAsync(async (req, res, next) => {
     const stats = await Tour.aggregate([

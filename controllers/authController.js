@@ -6,96 +6,81 @@ const AppError = require('../utils/appError');
 const ApiFeatures = require('../utils/apiFeatures');
 const sendEmail = require('../utils/email');
 const crypto = require('crypto');
+const factory = require('./handlers/factoryHandlers');
 
-
-const signToken = id => {
+const signToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRY_DURATION
-    })
-}
+        expiresIn: process.env.JWT_EXPIRY_DURATION,
+    });
+};
 
-exports.signup = catchAsync(async(req, res, next) => {
-  // const user = await User.create(req.body)
-  const user = await User.create({
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
-    passwordConfirm: req.body.passwordConfirm,
-    passwordChangedAt: req.body.passwordChangedAt,
-    role: req.body.role,
-  });
+exports.signup = catchAsync(async (req, res, next) => {
+    // const user = await User.create(req.body)
+    const user = await User.create({
+        name: req.body.name,
+        email: req.body.email,
+        password: req.body.password,
+        passwordConfirm: req.body.passwordConfirm,
+        passwordChangedAt: req.body.passwordChangedAt,
+        role: req.body.role,
+    });
 
-  user.password = undefined;
-  // const token = jwt.sign({ id:user._id }, process.env.JWT_SECRET, {
-  //     expiresIn: process.env.JWT_EXPIRY_DURATION
-  // })
-  const token = signToken(user._id);
-  const cookieOptions = {
-    expires: new Date(
-      Date.now() + process.env.JWT_COOKIE_EXPIRY_DURATION * 60 * 60 * 1000
-    ),
-    secure: process.env.NODE_ENV === 'production' ? true : false,
-    httpOnly: true,
-  };
+    user.password = undefined;
+    // const token = jwt.sign({ id:user._id }, process.env.JWT_SECRET, {
+    //     expiresIn: process.env.JWT_EXPIRY_DURATION
+    // })
+    const token = signToken(user._id);
+    const cookieOptions = {
+        expires: new Date(
+            Date.now() + process.env.JWT_COOKIE_EXPIRY_DURATION * 60 * 60 * 1000
+        ),
+        secure: process.env.NODE_ENV === 'production' ? true : false,
+        httpOnly: true,
+    };
 
-  res.cookie('jwt', token, cookieOptions);
-  res.status(201).json({
-    status: 'success',
-    token,
-    data: {
-      user,
-    },
-  });
-})
+    res.cookie('jwt', token, cookieOptions);
+    res.status(201).json({
+        status: 'success',
+        token,
+        data: {
+            user,
+        },
+    });
+});
 
 // exports.login = catchAsync(async (req, res, next) => {
 //     const { email, password } = req.body
 // })
-exports.login = catchAsync(async(req, res, next) => {
-    const { email, password } = req.body
+exports.login = catchAsync(async (req, res, next) => {
+    const { email, password } = req.body;
 
-    if(!email || !password) {
-        next(new AppError('Please provide email and password!', 400))
+    if (!email || !password) {
+        next(new AppError('Please provide email and password!', 400));
     }
 
-    const user = await User.findOne({ email }).select('+password')
+    const user = await User.findOne({ email }).select('+password');
 
-    if(!user || !(await user.correctPassword(password, user.password))) {
-        return next(new AppError('Incorrect Credentials!', 401))
+    if (!user || !(await user.correctPassword(password, user.password))) {
+        return next(new AppError('Incorrect Credentials!', 401));
     }
 
-    
-    const token = signToken(user._id)
+    const token = signToken(user._id);
     const cookieOptions = {
-        expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRY_DURATION * 60 * 1000),
+        expires: new Date(
+            Date.now() + process.env.JWT_COOKIE_EXPIRY_DURATION * 60 * 1000
+        ),
         secure: process.env.NODE_ENV === 'production' ? true : false,
-        httpOnly: true
-    }
+        httpOnly: true,
+    };
 
-    res.cookie('jwt', token, cookieOptions)
+    res.cookie('jwt', token, cookieOptions);
     res.status(200).json({
         status: 'success',
-        token
-    })
-})
+        token,
+    });
+});
 
-exports.getAllUsers = catchAsync(async(req, res, next) => {
-    
-    const features = new ApiFeatures(User.find(), req.query)
-        .filter()
-        .sort()
-        .limitFilds()
-        .pagination()
-    const users = await features.query
-
-    res.status(200).json({
-        status: 'success',
-        results: users.length,
-        data: {
-            users
-        }
-    })
-})
+exports.getAllUsers = factory.getAll(User);
 
 exports.protect = catchAsync(async (req, res, next) => {
     let token
