@@ -4,15 +4,17 @@ const userController = require('../controllers/userController')
 const authController = require('../controllers/authController')
 
 
-router.get('/', authController.getAllUsers)
-router.get('/me', authController.protect, userController.getMe, userController.getUser)
 router.post('/signup', authController.signup)
 router.post('/login', authController.login)
 router.post('/forgot-password', authController.forgotPassword)
 router.patch('/reset-password/:token', authController.resetPassword)
-router.patch('/update-password', authController.protect, authController.updatePassword)
-router.patch('/update-my-details', authController.protect, userController.updateMyDetails)
-router.delete('/delete-my-account', authController.protect, userController.deleteMyAccount)
+
+router.use(authController.protect)
+
+router.get('/me', userController.getMe, userController.getUser)
+router.patch('/update-password', authController.updatePassword)
+router.patch('/update-my-details', userController.updateMyDetails)
+router.delete('/delete-my-account', userController.deleteMyAccount)
 
 router.route('/')
     .get(userController.getAllUsers)

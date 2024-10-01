@@ -6,29 +6,29 @@ const router = express.Router();
 const reviewRouter = require('../routes/reviewRoutes');
 
 router.param('id', (req, res, next, value) => {
-    console.log(value);
-    next();
+	console.log(value);
+	next();
 });
 
 // Routes
 router
-    .route('/')
-    .get(authController.protect, getAllTours)
-    .post(authController.protect, createTour);
+	.route('/')
+	.get(getAllTours)
+	.post(authController.protect, authController.restictTo('admin', 'lead-guide'), createTour);
 
 router.route('/stats').get(getTourStats);
 
-router.route('/monthly-plan/:year').get(getMonthlyPlan);
+router.route('/monthly-plan/:year').get(authController.protect, authController.restictTo('admin', 'lead-guide', 'guide'), getMonthlyPlan);
 
 router
-    .route('/:id')
-    .get(getTour)
-    .patch(updateTour)
-    .delete(
-        authController.protect,
-        authController.restictTo('admin', 'lead-guide'),
-        deleteTour
-    );
+	.route( '/:id')
+	.get(authController.protect, authController.restictTo('admin', 'lead-guide'), getTour)
+	.patch(authController.protect, authController.restictTo('admin', 'lead-guide'), updateTour)
+	.delete(
+		authController.protect,
+		authController.restictTo('admin', 'lead-guide'),
+		deleteTour
+	);
 
 // Using standard way
 // router

@@ -26,6 +26,8 @@ exports.createUser = (req, res) => {
     });
 };
 exports.getUser = factory.getOne(User, []);
+exports.updateUser = factory.updateOne(User);
+exports.deleteUser = factory.deleteOne(User);
 
 exports.updateMyDetails = catchAsync(async(req, res, next) => {
     
