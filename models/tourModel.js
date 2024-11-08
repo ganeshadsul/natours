@@ -114,6 +114,16 @@ const tourSchema = mongoose.Schema(schema, {
     toObject: { virtuals: true },
 })
 
+// tourSchema.index({ price : 1 })
+tourSchema.index({
+    price : 1,
+    ratingAverage : -1
+})
+
+tourSchema.index({
+    slug : 1
+})
+
 // Middleware
 // Document Middleware
 // tourSchema.pre('save', function (next) {
