@@ -1,5 +1,5 @@
 const express = require('express');
-const {getAllTours, createTour, getTour, updateTour, deleteTour, getTourStats, getMonthlyPlan, getToursWithin} = require('./../controllers/tourController');
+const {getAllTours, createTour, getTour, updateTour, deleteTour, getTourStats, getMonthlyPlan, getToursWithin, getToursDistance} = require('./../controllers/tourController');
 const authController = require('../controllers/authController')
 const reviewController = require('../controllers/reviewController');
 const router = express.Router();
@@ -18,6 +18,7 @@ router
 
 
 router.route('/tours-within/:distance/center/:latlng/unit/:unit').get(getToursWithin)
+router.route('/distances/:latlng/unit/:unit').get(getToursDistance)
 
 router.route('/stats').get(getTourStats);
 

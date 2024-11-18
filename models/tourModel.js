@@ -176,6 +176,9 @@ tourSchema.post(/^find/, function(docs, next) {
 
 // Aggregation
 tourSchema.pre('aggregate', function(next) {
+    if (this.pipeline().length > 0 && this.pipeline()[0].$geoNear) {
+        return next(); // Skip middleware if $geoNear is the first stage
+    }
     this.pipeline().unshift({ $match: { secretTour: { $ne : true } } })
     next()
 })
