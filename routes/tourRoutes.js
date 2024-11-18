@@ -1,5 +1,5 @@
 const express = require('express');
-const {getAllTours, createTour, getTour, updateTour, deleteTour, getTourStats, getMonthlyPlan} = require('./../controllers/tourController');
+const {getAllTours, createTour, getTour, updateTour, deleteTour, getTourStats, getMonthlyPlan, getToursWithin} = require('./../controllers/tourController');
 const authController = require('../controllers/authController')
 const reviewController = require('../controllers/reviewController');
 const router = express.Router();
@@ -15,6 +15,9 @@ router
 	.route('/')
 	.get(getAllTours)
 	.post(authController.protect, authController.restictTo('admin', 'lead-guide'), createTour);
+
+
+router.route('/tours-within/:distance/center/:latlng/unit/:unit').get(getToursWithin)
 
 router.route('/stats').get(getTourStats);
 

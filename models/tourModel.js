@@ -125,6 +125,10 @@ tourSchema.index({
     slug : 1
 })
 
+tourSchema.index({
+    startLocation: '2dsphere'
+})
+
 // Middleware
 // Document Middleware
 // tourSchema.pre('save', function (next) {
