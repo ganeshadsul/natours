@@ -10,8 +10,13 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const path = require('path');
 
 const app = express();
+
+// setting template engine
+app.set('view engine', 'pug')
+app.set('views', path.join(__dirname, 'views'))
 
 // Set security HTTP headers
 app.use(helmet());
@@ -54,7 +59,8 @@ app.use(
 );
 
 // Serving static files
-app.use(express.static(`${__dirname}/public`));
+// app.use(express.static(`${__dirname}/public`));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // app.get('/', (req, res) => {
 //     // res.status(200).send('Hello From Home Page!')
@@ -78,6 +84,11 @@ app.use(express.static(`${__dirname}/public`));
 // app.get('/api/v1/tours', getAllTours)
 // app.post('/api/v1/tours', createTour)
 // app.get('/api/v1/tours/:id', getTour)
+
+
+app.get('/', (req, res) => {
+    res.status(200).render('base')
+})
 
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
