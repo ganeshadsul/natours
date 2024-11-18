@@ -22,7 +22,7 @@ router.route('/monthly-plan/:year').get(authController.protect, authController.r
 
 router
 	.route( '/:id')
-	.get(authController.protect, authController.restictTo('admin', 'lead-guide'), getTour)
+	.get(authController.protect, authController.restictTo('admin', 'lead-guide', 'user'), getTour)
 	.patch(authController.protect, authController.restictTo('admin', 'lead-guide'), updateTour)
 	.delete(
 		authController.protect,

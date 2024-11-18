@@ -31,7 +31,8 @@ const schema = {
     },
     ratingAverage: {
         type: Number,
-        default: 4.5
+        default: 4.5,
+        set: val => Math.round(val * 10) / 10
     },
     ratingQuantity: {
         type: Number,

@@ -31,6 +31,8 @@ const reviewSchema = mongoose.Schema(schema, {
     toObject: { virtuals: true },
 });
 
+reviewSchema.index({ tour: 1, user: 1 }, { unique: true })
+
 reviewSchema.statics.calcAverageRating = async function (tourId) {
     const stats = await this.aggregate([
         {
