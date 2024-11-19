@@ -137,10 +137,10 @@ tourSchema.index({
 // })
 
 // Using Embedding to save user(guides in same object)
-// tourSchema.pre('save', function (next) {
-//     this.slug = slugify(this.name, { lower: true })
-//     next()
-// })
+tourSchema.pre('save', function (next) {
+    this.slug = slugify(this.name, { lower: true })
+    next()
+})
 
 tourSchema.pre('save', async function (next) {
     const guidePromises = this.guides.map(async id => await User.findById(id))
