@@ -87,7 +87,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.get('/', (req, res) => {
-    res.status(200).render('base')
+    res.status(200).render('base', {
+        tour: 'The Forest Hiker',
+        user: 'Manthan Adsul'
+    })
 })
 
 app.use('/api/v1/tours', tourRouter);
