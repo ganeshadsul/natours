@@ -88,8 +88,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
     res.status(200).render('base', {
+        title: 'This is Home to the Tours!',
         tour: 'The Forest Hiker',
         user: 'Manthan Adsul'
+    })
+})
+
+app.get('/overview', (req, res) => {
+    res.status(200).render('overview', {
+        title: 'All Tours'
+    })
+})
+app.get('/tour', (req, res) => {
+    res.status(200).render('tour', {
+        title: 'This is Tour Title',
+        tour: 'The Forest Hiker'
     })
 })
 
