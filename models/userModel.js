@@ -23,7 +23,7 @@ const schema = {
         enum: ['user', 'guide', 'lead-guide', 'admin'],
         default: 'user'
     },
-    image: {
+    photo: {
         type: String,
         // required: [true, 'User must have an image']
     },

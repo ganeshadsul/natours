@@ -83,7 +83,7 @@ reviewSchema.pre(/^find/, function (next) {
     // this.populate('tour').populate('user');
     this.populate({
         path: 'user',
-        select: '_id name',
+        select: '_id name photo',
     });
     next();
 });
