@@ -19,13 +19,19 @@ exports.getOverview = catchAsync(async (req, res, next) => {
 })
 
 exports.getTour = catchAsync(async (req, res, next) => {
+	res.setHeader(
+        "Content-Security-Policy",
+        "script-src 'self' https://cdn.maptiler.com; worker-src 'self' blob:;"
+    );
 	const tour = await Tour.findOne({ slug: req.params.slug }).populate({
 		path: 'reviews',
 		fields: 'review rating user'
 	})
+	const mapKey = process.env.MAPTILER_KEY
 
 	res.status(200).render('tour', {
 		title: tour.name,
-		tour
+		tour,
+		mapKey
 	})
 })

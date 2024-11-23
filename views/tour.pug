@@ -1,5 +1,9 @@
 extends base
 
+block append head
+    script(src='https://cdn.maptiler.com/maptiler-sdk-js/v2.3.0/maptiler-sdk.umd.min.js')
+    link(href='https://cdn.maptiler.com/maptiler-sdk-js/v2.3.0/maptiler-sdk.css', rel='stylesheet')
+
 mixin overviewBox(icon, label, text)
     .overview-box__detail
         svg.overview-box__icon
@@ -57,7 +61,7 @@ block content
                 img.picture-box__img(src=`/img/tours/${image}`, alt=`The Park Camper Tour ${ i + 1 }`, class=`picture-box__img--${ i + 1 }`)
 
     section.section-map
-        #map
+        #map(data-locations=`${JSON.stringify(tour.locations)}`)
 
     section.section-reviews
         .reviews
@@ -82,3 +86,8 @@ block content
                 h2.heading-secondary What are you waiting for?
                 p.cta__text= `${tour.duration} days. 1 adventure. Infinite memories. Make it yours today!`
                 button.btn.btn--green.span-all-rows Book tour now!
+
+    input(type="hidden" id='map-key' name="mapKey" value=`${mapKey}`)
+
+block append scripts
+    script(src='/js/mapbox.js')
