@@ -35,3 +35,14 @@ exports.getTour = catchAsync(async (req, res, next) => {
 		mapKey
 	})
 })
+
+// User Login Page
+exports.getLoginForm = catchAsync(async (req, res, next) => {
+	res.setHeader(
+        "Content-Security-Policy",
+        "script-src 'self' https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js; worker-src 'self' blob:;"
+    );
+	res.status(200).render('login', {
+		title: 'Login'
+	})
+})
