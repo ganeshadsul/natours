@@ -22,6 +22,12 @@ app.set('views', path.join(__dirname, 'views'))
 
 // Set security HTTP headers
 app.use(helmet());
+app.use(helmet.contentSecurityPolicy({
+    directives: {
+        defaultSrc: ["*"],
+        scriptSrc: ["'self' https://cdnjs.cloudflare.com", "'self' https://cdn.maptiler.com"],
+    }
+}))
 
 // Global Middleware
 // Limit requests from same API

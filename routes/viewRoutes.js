@@ -10,4 +10,5 @@ router.use(isLoggedIn)
 router.get('/', viewController.getOverview)
 router.get('/tour/:slug', viewController.getTour)
 router.get('/login', viewController.getLoginForm)
+// router.get('/logout', )
 module.exports = router

@@ -80,6 +80,16 @@ exports.login = catchAsync(async (req, res, next) => {
     });
 });
 
+exports.logout = catchAsync(async (req, res, next) => {
+    res.cookie('jwt', '', {
+        expires: new Date(Date.now() + 10 * 1000), // expires in 10 seconds,
+        httpOnly: true
+    })
+    res.status(200).json({
+        status: 'success',
+        message: 'Successfully logged out.'
+    })
+})
 exports.getAllUsers = factory.getAll(User);
 
 exports.protect = catchAsync(async (req, res, next) => {
