@@ -1,4 +1,5 @@
 const Tour = require('../models/tourModel')
+const AppError = require('../utils/appError')
 const catchAsync =  require('../utils/catchAsync')
 
 exports.base = (req, res) => {
@@ -27,6 +28,9 @@ exports.getTour = catchAsync(async (req, res, next) => {
 		path: 'reviews',
 		fields: 'review rating user'
 	})
+	if(!tour) {
+		next(new AppError('No Tour Found', 404))
+	}
 	const mapKey = process.env.MAPTILER_KEY
 
 	res.status(200).render('tour', {

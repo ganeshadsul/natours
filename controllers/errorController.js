@@ -11,25 +11,39 @@ const handleDuplicateFieldsDB = err => {
     return new AppError(message, 400)
 }
 
-const sendErrorDev = (err, res) => {
-    res.status(err.statusCode).json({
-        status: err.status,
-        error: err,
-        message: err.message,
-        stack: err.stack
-    })
-}
-
-const sendErrorProd = (err, res) => {
-    if(err.isOperational) {
+const sendErrorDev = (err, req, res) => {
+    if(req.originalUrl.startsWith('/api')) {
         res.status(err.statusCode).json({
             status: err.status,
+            error: err,
             message: err.message,
+            stack: err.stack
         })
     } else {
-        res.status(500).json({
-            status: 'error',
-            message: 'Something Went Wrong!'
+        res.status(err.statusCode).render('error', {
+            title: 'Something went wrong!',
+            message: 'Opps!! Something went wrong!'
+        })
+    }
+}
+
+const sendErrorProd = (err, req, res) => {
+    if(req.originalUrl.startsWith('/api')) {
+        if(err.isOperational) {
+            res.status(err.statusCode).json({
+                status: err.status,
+                message: err.message,
+            })
+        } else {
+            res.status(500).json({
+                status: 'error',
+                message: 'Something Went Wrong!'
+            })
+        }
+    } else {
+        res.status(err.statusCode).render('error', {
+            title: 'Something went wrong!',
+            message: 'Opps!! Something went wrong!'
         })
     }
 }
@@ -50,7 +64,7 @@ module.exports = (err, req, res, next) => {
 
 
     if(process.env.NODE_ENV === 'development') {
-        sendErrorDev(err, res)
+        sendErrorDev(err, req, res)
     } else if(process.env.NODE_ENV === 'production') {
         let error = {...err}
         console.log(err.name);
@@ -59,6 +73,6 @@ module.exports = (err, req, res, next) => {
         if(err.name === 'ValidationError') error = handleValidationError(err)
         if(err.name === 'JsonWebTokenError') error = handleTokenExpiredError()
         if(err.name === 'TokenExpiredError') error = handleTokenExpiredError()
-        sendErrorProd(error, res)
+        sendErrorProd(error, req, res)
     }
 }
