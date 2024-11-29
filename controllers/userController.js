@@ -2,6 +2,33 @@ const User = require("../models/userModel")
 const AppError = require("../utils/appError")
 const catchAsync = require("../utils/catchAsync")
 const factory = require('./handlers/factoryHandlers');
+const multer = require('multer')
+
+const multerStorage = multer.diskStorage({
+    destination: (req, res, callback) => {
+        callback(null, 'public/img/users')
+    },
+    filename: (req, file, callback) => {
+        const fileExtension = file.mimetype.split('/')[1]
+        callback(null, `user-${req.user.id}-${Date.now()}.${fileExtension}`)
+    }
+})
+
+const multerFilter = (req, file, callback) => {
+    console.log(file.mimetype.startsWith('image'));
+    if(file.mimetype.startsWith('image')) {
+        callback(null, true)
+    } else {
+        callback(new AppError('Not an Image! Please upload only images', 400), false)
+    }
+}
+
+const upload = multer({
+    storage: multerStorage,
+    fileFilter: multerFilter
+})
+
+exports.uploadUserPhoto = upload.single('photo')
 
 const filteObj = (obj, ...allowedFields) => {
     const newObj = {};
@@ -30,12 +57,13 @@ exports.updateUser = factory.updateOne(User);
 exports.deleteUser = factory.deleteOne(User);
 
 exports.updateMyDetails = catchAsync(async(req, res, next) => {
-    
+
     if(req.body.password || req.body.passwordConfirm) {
         return next(new AppError('Password updation not allowed on this route', 400))
     }
 
     const filteredObject = filteObj(req.body, 'name', 'email')
+    if(req.file) filteredObject.photo = req.file.filename
 
     const user = await User.findByIdAndUpdate(req.user.id, filteredObject, {
         new:true,

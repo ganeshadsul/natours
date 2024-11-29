@@ -11,10 +11,11 @@ router.post('/forgot-password', authController.forgotPassword)
 router.patch('/reset-password/:token', authController.resetPassword)
 
 router.use(authController.protect)
+console.log('23456789');
 
 router.get('/me', userController.getMe, userController.getUser)
 router.patch('/update-password', authController.updatePassword)
-router.patch('/update-my-details', userController.updateMyDetails)
+router.patch('/update-my-details', userController.uploadUserPhoto, userController.updateMyDetails)
 router.delete('/delete-my-account', userController.deleteMyAccount)
 
 router.route('/')

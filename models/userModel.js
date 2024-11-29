@@ -25,7 +25,8 @@ const schema = {
     },
     photo: {
         type: String,
-        // required: [true, 'User must have an image']
+        // required: [true, 'User must have an image'],
+        default: 'default.jpg'
     },
     password: {
         type: String,
