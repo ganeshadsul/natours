@@ -117,6 +117,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     }
 
     req.user = freshUser
+    res.locals.user = freshUser
     next()
 })
 
@@ -220,6 +221,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
     
+    console.log(req.body);
     if(!req.body.currentPassword || !req.body.password || !req.body.passwordConfirm) return next(new AppError('Password is required', 400))
 
     const  {currentPassword, password, passwordConfirm } = req.body     

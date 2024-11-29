@@ -1,15 +1,15 @@
-const hideAlerts = () => {
-    const el = document.querySelector('.alert')
-    if(el) el.parentElement.removeChild(el)
-}
-const showAlerts = (type, msg) => {
-    hideAlerts()
-    const markUp = `<div class="alert alert--${type}">${msg}</div>`
-    document.querySelector('body').insertAdjacentHTML('afterbegin', markUp)
+// const hideAlerts = () => {
+//     const el = document.querySelector('.alert')
+//     if(el) el.parentElement.removeChild(el)
+// }
+// const showAlerts = (type, msg) => {
+//     hideAlerts()
+//     const markUp = `<div class="alert alert--${type}">${msg}</div>`
+//     document.querySelector('body').insertAdjacentHTML('afterbegin', markUp)
 
-    window.setTimeout(hideAlerts, 5000);
-}
-
+//     window.setTimeout(hideAlerts, 5000);
+// }
+import showAlerts from '/js/alerts.js'
 
 const login = async (email, password) => {
     try {
@@ -52,9 +52,9 @@ const logout = async () => {
     }
 }
 
-let formElement = document.querySelector('.form')
-if(formElement) {
-    formElement.addEventListener('submit', e => {
+let loginFormElement = document.querySelector('.user-login-form')
+if(loginFormElement) {
+    loginFormElement.addEventListener('submit', e => {
         e.preventDefault()    
     
         const email = document.getElementById('email').value

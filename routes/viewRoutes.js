@@ -5,10 +5,9 @@ const {protect, isLoggedIn} = require('../controllers/authController')
 
 
 // router.get('/', viewController.base)
-router.use(isLoggedIn)
 
-router.get('/', viewController.getOverview)
-router.get('/tour/:slug', viewController.getTour)
-router.get('/login', viewController.getLoginForm)
-// router.get('/logout', )
+router.get('/', isLoggedIn, viewController.getOverview)
+router.get('/tour/:slug', isLoggedIn, viewController.getTour)
+router.get('/login', isLoggedIn, viewController.getLoginForm)
+router.get('/me', protect, viewController.getAccount)
 module.exports = router
