@@ -57,6 +57,7 @@ block content
 
     section.section-pictures
         each image, i in tour.images
+            - console.log(image)
             .picture-box
                 img.picture-box__img(src=`/img/tours/${image}`, alt=`The Park Camper Tour ${ i + 1 }`, class=`picture-box__img--${ i + 1 }`)
 

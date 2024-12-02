@@ -1,14 +1,11 @@
 import showAlerts from '/js/alerts.js'
 
-const updateUserInfo = async (name, email) => {
+const updateUserInfo = async (form) => {
     try {
         const res = await axios({
             method: 'PATCH',
             url: '/api/v1/users/update-my-details',
-            data: {
-                name,
-                email
-            }
+            data: form
         })
         if(res.data.status === 'success') {
             showAlerts('success', 'User info updated.')
@@ -43,10 +40,15 @@ if(updateUserInfoForm) {
     updateUserInfoForm.addEventListener('submit', async (e) => {
         e.preventDefault()
 
-        const email = document.getElementById('email').value
-        const name = document.getElementById('name').value
 
-        const data = await updateUserInfo(name, email)
+        const form = new FormData()
+
+        form.append('name', document.getElementById('name').value)
+        form.append('email', document.getElementById('email').value)
+        form.append('photo', document.getElementById('photo').files[0])
+        console.log(form);
+
+        const data = await updateUserInfo(form)
         if(data) {
             document.getElementById('name').value = data.name
             document.getElementById('email').value = data.email

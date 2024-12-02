@@ -1,5 +1,5 @@
 const express = require('express');
-const {getAllTours, createTour, getTour, updateTour, deleteTour, getTourStats, getMonthlyPlan, getToursWithin, getToursDistance} = require('./../controllers/tourController');
+const {getAllTours, createTour, getTour, updateTour, deleteTour, getTourStats, getMonthlyPlan, getToursWithin, getToursDistance, uploadTourImages, resizeTourPhoto} = require('./../controllers/tourController');
 const authController = require('../controllers/authController')
 const reviewController = require('../controllers/reviewController');
 const router = express.Router();
@@ -27,7 +27,7 @@ router.route('/monthly-plan/:year').get(authController.protect, authController.r
 router
 	.route( '/:id')
 	.get(authController.protect, authController.restictTo('admin', 'lead-guide', 'user'), getTour)
-	.patch(authController.protect, authController.restictTo('admin', 'lead-guide'), updateTour)
+	.patch(authController.protect, authController.restictTo('admin', 'lead-guide'), uploadTourImages, resizeTourPhoto, updateTour)
 	.delete(
 		authController.protect,
 		authController.restictTo('admin', 'lead-guide'),
