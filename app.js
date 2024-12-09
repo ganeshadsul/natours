@@ -13,6 +13,7 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const path = require('path');
 const cookieParser = require('cookie-parser')
+const compression = require('compression');
 
 const app = express();
 
@@ -52,6 +53,10 @@ app.use(mongoSanitize());
 
 // Data sanitization against XSS
 app.use(xss());
+
+
+// compressing response texts
+app.use(compression())
 
 // Prevent parameter pollution
 app.use(
